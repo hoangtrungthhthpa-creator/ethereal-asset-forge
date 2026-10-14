@@ -12,19 +12,22 @@ type CGCallbacks = { adStarted?: () => void; adFinished?: () => void; adError?: 
 type CrazySDK = { init: () => Promise<void>; ad: { requestAd: (t: "rewarded" | "midgame", cb: CGCallbacks) => void }; game?: { gameplayStart?: () => void; gameplayStop?: () => void; loadingStop?: () => void } };
 type Poki = { init: () => Promise<void>; gameLoadingFinished: () => void; gameplayStart: () => void; gameplayStop: () => void; rewardedBreak: (o?: { onStart?: () => void }) => Promise<boolean> };
 declare global {
+  interface ImportMetaEnv {
+    readonly VITE_AD_PLATFORM?: string;
+  }
   interface Window {
     CrazyGames?: { SDK: CrazySDK };
     PokiSDK?: Poki;
   }
 }
 
-const raw = String(import.meta.env["VITE_AD_PLATFORM"] ?? "").toLowerCase();
+const raw = String(import.meta.env.VITE_AD_PLATFORM ?? "").toLowerCase();
 export const AD_PLATFORM: AdPlatform = raw === "crazygames" || raw === "poki" ? raw : "none";
 
 // Compared against the raw build-time constant so the bundler drops the other platform's URL.
 const SDK_SRC =
-  import.meta.env["VITE_AD_PLATFORM"] === "crazygames" ? "https://sdk.crazygames.com/crazygames-sdk-v3.js"
-  : import.meta.env["VITE_AD_PLATFORM"] === "poki" ? "https://game-cdn.poki.com/scripts/v2/poki-sdk.js"
+  import.meta.env.VITE_AD_PLATFORM === "crazygames" ? "https://sdk.crazygames.com/crazygames-sdk-v3.js"
+  : import.meta.env.VITE_AD_PLATFORM === "poki" ? "https://game-cdn.poki.com/scripts/v2/poki-sdk.js"
   : "";
 
 let ready: Promise<boolean> | null = null;
