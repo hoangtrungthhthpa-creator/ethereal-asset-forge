@@ -8,9 +8,11 @@ const root = fileURLToPath(new URL("./itch", import.meta.url));
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "VITE_");
-  const crazyGamesSdk = env.VITE_AD_PLATFORM === "crazygames"
+  const sdkScript = env.VITE_AD_PLATFORM === "crazygames"
     ? '<script src="https://sdk.crazygames.com/crazygames-sdk-v3.js"></script>'
-    : undefined;
+    : env.VITE_AD_PLATFORM === "gamepix"
+      ? '<script src="//integration.gamepix.com/sdk/v3/gamepix.sdk.js"></script>'
+      : undefined;
 
   return {
     root,
@@ -22,7 +24,7 @@ export default defineConfig(({ mode }) => {
       {
         name: "crazygames-sdk-head-script",
         transformIndexHtml(html: string) {
-          return crazyGamesSdk ? html.replace("</head>", `    ${crazyGamesSdk}\n  </head>`) : html;
+          return sdkScript ? html.replace("</head>", `    ${sdkScript}\n  </head>`) : html;
         },
       },
     ],

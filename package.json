@@ -12,7 +12,8 @@
     "format": "prettier --write .",
     "build:itch": "vite build --config vite.itch.config.ts",
     "build:crazygames": "VITE_AD_PLATFORM=crazygames vite build --config vite.itch.config.ts --outDir ../dist-crazygames",
-    "build:poki": "VITE_AD_PLATFORM=poki vite build --config vite.itch.config.ts --outDir ../dist-poki"
+    "build:poki": "VITE_AD_PLATFORM=poki vite build --config vite.itch.config.ts --outDir ../dist-poki",
+    "build:gamepix": "VITE_AD_PLATFORM=gamepix vite build --config vite.itch.config.ts --outDir ../dist-gamepix"
   },
   "overrides": {
     "rolldown": "1.2.1"
