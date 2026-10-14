@@ -81,7 +81,9 @@ export function useGameAudio(track: string = realmTrack(0)) {
   const trackRef = useRef(track);
   trackRef.current = track;
 
+  const adPausedRef = useRef(false);
   const startMusic = useCallback(() => {
+    if (adPausedRef.current) return;
     const bgm = getBgm();
     if (!sameTrack(bgm.src, trackRef.current)) bgm.src = trackRef.current;
     void bgm.play().catch(() => {
@@ -125,6 +127,26 @@ export function useGameAudio(track: string = realmTrack(0)) {
     }, 50);
     return () => { window.clearInterval(id); bgm.volume = 0.2; };
   }, [track, enabled]);
+
+  // Mute everything while a platform ad plays, then restore.
+  useEffect(() => {
+    const onPause = () => {
+      adPausedRef.current = true;
+      bgmRef.current?.pause();
+      void contextRef.current?.suspend().catch(() => {});
+    };
+    const onResume = () => {
+      adPausedRef.current = false;
+      void contextRef.current?.resume().catch(() => {});
+      if (enabled) startMusic();
+    };
+    window.addEventListener("game-ad-pause", onPause);
+    window.addEventListener("game-ad-resume", onResume);
+    return () => {
+      window.removeEventListener("game-ad-pause", onPause);
+      window.removeEventListener("game-ad-resume", onResume);
+    };
+  }, [enabled, startMusic]);
 
   useEffect(() => {
     return () => {

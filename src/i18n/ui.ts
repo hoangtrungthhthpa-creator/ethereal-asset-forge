@@ -125,7 +125,8 @@ export const UI = d({
   adWatching: ["Cao nhân đang giảng đạo...", "The master is expounding the Dao...", "高人讲道中……"],
   adLeft: ["Còn {a}/{b} lượt hôm nay", "{a}/{b} left today", "今日剩余 {a}/{b} 次"],
   adWait: ["Chờ {t} cho lượt kế tiếp", "Next in {t}", "下次需等待 {t}"],
-  adSim: ["(Chế độ thử: quảng cáo mô phỏng)", "(Test mode: simulated ads)", "（测试模式：模拟广告）"],
+  adSim: ["(Bản phát triển: chưa có quảng cáo thật, không nhận thưởng)", "(Dev build: no real ads, no rewards)", "（开发版：无真实广告，不发放奖励）"],
+  adUnavailable: ["Quảng cáo hiện không khả dụng hoặc đã gặp lỗi. Hãy thử lại sau.", "Ad unavailable or an error occurred. Please try again later.", "广告暂不可用或发生错误，请稍后再试。"],
   // Donate
   qrAlt: ["Mã QR chuyển khoản", "Transfer QR code", "转账二维码"],
   donateTitle: ["KHAI SÁNG TIÊN CẢNH", "EXPAND THE IMMORTAL REALM", "助力仙途"],

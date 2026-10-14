@@ -28,6 +28,7 @@ import {
 import { useCultivation } from "@/hooks/useCultivation";
 import { useGameAudio, backgroundTrack } from "@/hooks/useGameAudio";
 import { cn } from "@/lib/utils";
+import { initAds, gameplayStart } from "@/lib/ads";
 import { AdventureModal } from "@/components/AdventureModal";
 import { BreakthroughModal } from "@/components/BreakthroughModal";
 import { AscensionRoad } from "@/components/AscensionRoad";
@@ -110,6 +111,18 @@ function Game() {
   const herbName = (id: string) => c(`herb.${id}`, HERBS.find((x) => x.id === id)!.name);
 
   const showOnboarding = loaded && !state.root;
+
+  // Platform ad SDK: init on load, gameplayStart on first player input (deduplicated in lib/ads).
+  useEffect(() => {
+    void initAds();
+    const start = () => gameplayStart();
+    window.addEventListener("pointerdown", start, { once: true });
+    window.addEventListener("keydown", start, { once: true });
+    return () => {
+      window.removeEventListener("pointerdown", start);
+      window.removeEventListener("keydown", start);
+    };
+  }, []);
 
   const need = qiNeeded(state);
   const pct = Math.min(100, (state.qi / need) * 100);

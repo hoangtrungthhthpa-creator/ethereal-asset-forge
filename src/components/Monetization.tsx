@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { HERBS, type HerbId } from "@/lib/cultivation";
 import { isSimulatedAds, showRewardedAd } from "@/lib/ads";
 import { useI18n } from "@/i18n";
@@ -79,14 +79,20 @@ export function AdRewardModal({
   const mm = String(Math.floor(remain / 60000)).padStart(2, "0");
   const ss = String(Math.floor((remain % 60000) / 1000)).padStart(2, "0");
 
+  const lock = useRef(false);
   async function watch(kind: "stones" | "herb", chosen?: HerbId) {
-    if (!canWatch) return;
+    if (!canWatch || lock.current) return;
+    lock.current = true;
     setPicking(false);
     setWatching(true);
     setMsg(null);
-    const ok = await showRewardedAd();
+    const res = await showRewardedAd().catch(() => ({ ok: false as const, reason: "error" as const }));
     setWatching(false);
-    if (!ok) return setMsg(t("adFail"));
+    if (!res.ok) {
+      lock.current = false;
+      if (res.reason !== "busy") setMsg(t(res.reason === "not-finished" ? "adFail" : "adUnavailable"));
+      return;
+    }
     const next = { day: today(), count: readAds().count + 1, last: Date.now() };
     localStorage.setItem(AD_KEY, JSON.stringify(next));
     setAds(next);
@@ -99,6 +105,7 @@ export function AdRewardModal({
       onReward(0, h.id, 3, t("adHerbLog", { h: hn }));
       setMsg(t("adHerbMsg", { h: hn }));
     }
+    lock.current = false;
   }
 
   return (

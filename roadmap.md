@@ -7,3 +7,5 @@
 - [x] Fix spirit-root labels in breakthrough dialogs and initial cultivation narration.
 - [x] Audit all visible game fields and add missing English/Chinese translations.
 - [x] Verify translation coverage and the game UI in all three languages.
+# Platform ads
+- [x] CrazyGames v3 + Poki rewarded ads in Thỉnh Thị Cao Nhân, per-platform builds, no fake rewards in dev.
