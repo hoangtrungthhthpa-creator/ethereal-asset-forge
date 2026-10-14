@@ -14,3 +14,4 @@
 - Resolve Lovable CDN asset pointers against the game's published host, never a host inferred from the pointer's project ID; copied assets can belong to a different project and relative paths fail in local or draft previews.
 - Select BGM through backgroundTrack from realm and ascended state only, keeping transient notifications and level changes out of audio dependencies to preserve playback position.
 - The itch.io build (vite.itch.config.ts, itch/index.html, src/itch-main.tsx) renders the index route component directly with base "./"; keep the game client-only and reference public files via import.meta.env.BASE_URL so it runs in itch's iframe without a server.
+- Rewarded ads go through src/lib/ads.ts, chosen at build time by VITE_AD_PLATFORM (crazygames | poki | none); use dot access so the unused SDK is tree-shaken, and never grant rewards unless the platform SDK confirms completion.
