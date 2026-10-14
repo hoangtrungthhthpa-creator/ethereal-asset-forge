@@ -4,6 +4,6 @@
 - [x] Pressing "Đã hộ pháp" must no longer grant the title or log the investiture event.
 
 # Localization audit
-- [ ] Fix spirit-root labels in breakthrough dialogs and initial cultivation narration.
-- [ ] Audit all visible game fields and add missing English/Chinese translations.
-- [ ] Verify translation coverage and the game UI in all three languages.
+- [x] Fix spirit-root labels in breakthrough dialogs and initial cultivation narration.
+- [x] Audit all visible game fields and add missing English/Chinese translations.
+- [x] Verify translation coverage and the game UI in all three languages.
