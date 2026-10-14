@@ -81,13 +81,18 @@ export function AdRewardModal({
 
   const lock = useRef(false);
   async function watch(kind: "stones" | "herb", chosen?: HerbId) {
-    if (!canWatch || lock.current) return;
+    console.log("[v0] Reward button pressed", { kind, chosen, canWatch, watching, locked: lock.current, ads });
+    if (!canWatch || lock.current) {
+      console.log("[v0] Reward request blocked", { kind, reason: !canWatch ? "cooldown-or-limit-or-watching" : "duplicate-request" });
+      return;
+    }
     lock.current = true;
     setPicking(false);
     setWatching(true);
     setMsg(null);
     const res = await showRewardedAd().catch(() => ({ ok: false as const, reason: "error" as const }));
     setWatching(false);
+    console.log("[v0] Reward request completed", { kind, result: res });
     if (!res.ok) {
       lock.current = false;
       if (res.reason !== "busy") setMsg(t(res.reason === "not-finished" ? "adFail" : "adUnavailable"));
