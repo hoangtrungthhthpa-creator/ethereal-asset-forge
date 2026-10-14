@@ -28,6 +28,7 @@ import {
 import { useCultivation } from "@/hooks/useCultivation";
 import { useGameAudio, backgroundTrack } from "@/hooks/useGameAudio";
 import { cn } from "@/lib/utils";
+import { initAds, gameplayStart } from "@/lib/ads";
 import { AdventureModal } from "@/components/AdventureModal";
 import { BreakthroughModal } from "@/components/BreakthroughModal";
 import { AscensionRoad } from "@/components/AscensionRoad";

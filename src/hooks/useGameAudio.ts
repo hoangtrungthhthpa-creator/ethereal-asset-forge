@@ -126,6 +126,27 @@ export function useGameAudio(track: string = realmTrack(0)) {
     return () => { window.clearInterval(id); bgm.volume = 0.2; };
   }, [track, enabled]);
 
+  // Mute everything while a platform ad plays, then restore.
+  const adPausedRef = useRef(false);
+  useEffect(() => {
+    const onPause = () => {
+      adPausedRef.current = true;
+      bgmRef.current?.pause();
+      void contextRef.current?.suspend().catch(() => {});
+    };
+    const onResume = () => {
+      adPausedRef.current = false;
+      void contextRef.current?.resume().catch(() => {});
+      if (enabled) startMusic();
+    };
+    window.addEventListener("game-ad-pause", onPause);
+    window.addEventListener("game-ad-resume", onResume);
+    return () => {
+      window.removeEventListener("game-ad-pause", onPause);
+      window.removeEventListener("game-ad-resume", onResume);
+    };
+  }, [enabled, startMusic]);
+
   useEffect(() => {
     return () => {
       bgmRef.current?.pause();
