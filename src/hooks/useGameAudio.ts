@@ -81,7 +81,9 @@ export function useGameAudio(track: string = realmTrack(0)) {
   const trackRef = useRef(track);
   trackRef.current = track;
 
+  const adPausedRef = useRef(false);
   const startMusic = useCallback(() => {
+    if (adPausedRef.current) return;
     const bgm = getBgm();
     if (!sameTrack(bgm.src, trackRef.current)) bgm.src = trackRef.current;
     void bgm.play().catch(() => {
@@ -127,7 +129,6 @@ export function useGameAudio(track: string = realmTrack(0)) {
   }, [track, enabled]);
 
   // Mute everything while a platform ad plays, then restore.
-  const adPausedRef = useRef(false);
   useEffect(() => {
     const onPause = () => {
       adPausedRef.current = true;
