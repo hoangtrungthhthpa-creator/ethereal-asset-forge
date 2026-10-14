@@ -112,17 +112,14 @@ function Game() {
 
   const showOnboarding = loaded && !state.root;
 
-  // Platform ad SDK: init on load, gameplayStart on first player input (deduplicated in lib/ads).
+  // Initialize during loading; report gameplay only once a saved/new run is playable.
   useEffect(() => {
     void initAds();
-    const start = () => gameplayStart();
-    window.addEventListener("pointerdown", start, { once: true });
-    window.addEventListener("keydown", start, { once: true });
-    return () => {
-      window.removeEventListener("pointerdown", start);
-      window.removeEventListener("keydown", start);
-    };
   }, []);
+
+  useEffect(() => {
+    if (loaded && state.root) gameplayStart();
+  }, [loaded, state.root]);
 
   const need = qiNeeded(state);
   const pct = Math.min(100, (state.qi / need) * 100);

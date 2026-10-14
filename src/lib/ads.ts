@@ -36,6 +36,16 @@ let gameplayOn = false;
 
 function loadScript(src: string) {
   return new Promise<boolean>((resolve) => {
+    const existing = document.querySelector<HTMLScriptElement>(`script[src="${src}"]`);
+    if (existing) {
+      if (window.CrazyGames?.SDK || window.PokiSDK) {
+        resolve(true);
+        return;
+      }
+      existing.addEventListener("load", () => resolve(true), { once: true });
+      existing.addEventListener("error", () => resolve(false), { once: true });
+      return;
+    }
     const s = document.createElement("script");
     s.src = src;
     s.async = true;
