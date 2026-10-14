@@ -111,6 +111,18 @@ function Game() {
 
   const showOnboarding = loaded && !state.root;
 
+  // Platform ad SDK: init on load, gameplayStart on first player input (deduplicated in lib/ads).
+  useEffect(() => {
+    void initAds();
+    const start = () => gameplayStart();
+    window.addEventListener("pointerdown", start, { once: true });
+    window.addEventListener("keydown", start, { once: true });
+    return () => {
+      window.removeEventListener("pointerdown", start);
+      window.removeEventListener("keydown", start);
+    };
+  }, []);
+
   const need = qiNeeded(state);
   const pct = Math.min(100, (state.qi / need) * 100);
   const ready = state.qi >= need;
