@@ -21,7 +21,11 @@ declare global {
 const raw = String(import.meta.env["VITE_AD_PLATFORM"] ?? "").toLowerCase();
 export const AD_PLATFORM: AdPlatform = raw === "crazygames" || raw === "poki" ? raw : "none";
 
-const SDK_URL = { crazygames: "https://sdk.crazygames.com/crazygames-sdk-v3.js", poki: "https://game-cdn.poki.com/scripts/v2/poki-sdk.js" } as const;
+// Compared against the raw build-time constant so the bundler drops the other platform's URL.
+const SDK_SRC =
+  import.meta.env["VITE_AD_PLATFORM"] === "crazygames" ? "https://sdk.crazygames.com/crazygames-sdk-v3.js"
+  : import.meta.env["VITE_AD_PLATFORM"] === "poki" ? "https://game-cdn.poki.com/scripts/v2/poki-sdk.js"
+  : "";
 
 let ready: Promise<boolean> | null = null;
 let busy = false;
@@ -43,7 +47,7 @@ export function initAds(): Promise<boolean> {
   if (AD_PLATFORM === "none" || typeof window === "undefined") return Promise.resolve(false);
   if (ready) return ready;
   ready = (async () => {
-    if (!(await loadScript(SDK_URL[AD_PLATFORM]))) return false;
+    if (!SDK_SRC || !(await SDK_SRC && loadScript(SDK_SRC))) return false;
     try {
       if (AD_PLATFORM === "crazygames") {
         if (!window.CrazyGames?.SDK) return false;
