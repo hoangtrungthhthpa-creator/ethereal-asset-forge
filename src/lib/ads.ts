@@ -52,7 +52,7 @@ export function initAds(): Promise<boolean> {
   ready = (async () => {
     if (!SDK_SRC || !(await SDK_SRC && loadScript(SDK_SRC))) return false;
     try {
-      if (AD_PLATFORM === "crazygames") {
+      if (import.meta.env.VITE_AD_PLATFORM === "crazygames") {
         if (!window.CrazyGames?.SDK) return false;
         await window.CrazyGames.SDK.init();
         window.CrazyGames.SDK.game?.loadingStop?.();
@@ -76,14 +76,14 @@ export function gameplayStart() {
   void initAds().then((ok) => {
     if (!ok || gameplayOn || busy) return;
     gameplayOn = true;
-    if (AD_PLATFORM === "poki") window.PokiSDK?.gameplayStart();
+    if (import.meta.env.VITE_AD_PLATFORM === "poki") window.PokiSDK?.gameplayStart();
     else window.CrazyGames?.SDK.game?.gameplayStart?.();
   });
 }
 export function gameplayStop() {
   if (!gameplayOn) return;
   gameplayOn = false;
-  if (AD_PLATFORM === "poki") window.PokiSDK?.gameplayStop();
+  if (import.meta.env.VITE_AD_PLATFORM === "poki") window.PokiSDK?.gameplayStop();
   else window.CrazyGames?.SDK.game?.gameplayStop?.();
 }
 
@@ -105,7 +105,7 @@ export async function showRewardedAd(): Promise<AdResult> {
     const wasPlaying = gameplayOn;
     gameplayStop();
     let result: AdResult;
-    if (AD_PLATFORM === "poki") {
+    if (import.meta.env.VITE_AD_PLATFORM === "poki") {
       pauseGame();
       try {
         const success = await window.PokiSDK!.rewardedBreak();
