@@ -20,3 +20,7 @@ createRoot(document.getElementById("root")!).render(
     </LanguageProvider>
   </StrictMode>,
 );
+
+if (window.GamePix?.loaded) {
+  window.GamePix.loaded();
+}
