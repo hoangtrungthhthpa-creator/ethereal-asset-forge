@@ -29,6 +29,12 @@ import { useCultivation } from "@/hooks/useCultivation";
 import { useGameAudio, backgroundTrack } from "@/hooks/useGameAudio";
 import { cn } from "@/lib/utils";
 import { initAds, gameplayStart } from "@/lib/ads";
+
+const notifyGamePixLoaded = () => {
+  if (import.meta.env.VITE_AD_PLATFORM === "gamepix") {
+    window.GamePix?.loaded();
+  }
+};
 import { AdventureModal } from "@/components/AdventureModal";
 import { BreakthroughModal } from "@/components/BreakthroughModal";
 import { AscensionRoad } from "@/components/AscensionRoad";
@@ -116,6 +122,10 @@ function Game() {
   useEffect(() => {
     void initAds();
   }, []);
+
+  useEffect(() => {
+    if (loaded) notifyGamePixLoaded();
+  }, [loaded]);
 
   useEffect(() => {
     if (loaded && state.root) gameplayStart();
